@@ -11,7 +11,7 @@ h1 {
   color: #333;
 }
 
-.demo-section {
+.test-section {
   margin-bottom: 30px;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -20,22 +20,22 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.demo-section h2 {
+.test-section h2 {
   margin-top: 0;
   color: #444;
 }
 
-.demo-controls {
+.test-controls {
   margin-bottom: 15px;
 }
 
-.demo-outputs {
+.test-outputs {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
 }
 
-.demo-output {
+.test-output {
   flex: 1 1 calc(33.333% - 20px);
   min-width: 250px;
   background-color: #f8f8f8;
@@ -49,7 +49,7 @@ h1 {
   overflow: hidden;
 }
 
-.demo-config {
+.test-config {
   font-size: 12px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.7);
@@ -61,7 +61,7 @@ h1 {
   z-index: 1;
 }
 
-.demo-result {
+.test-result {
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -70,7 +70,7 @@ h1 {
   padding-top: 30px; /* Add extra padding to account for the config bar */
 }
 
-.demo-result img {
+.test-result img {
   max-width: 100%;
   height: auto;
 }
