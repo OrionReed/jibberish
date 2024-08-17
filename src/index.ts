@@ -16,19 +16,43 @@ import {
   FingerprintAlgorithm,
 } from "./generators/fingerprint";
 
+// Base interface for all options
+export interface BaseGeneratorOptions {
+  seed?: string | number;
+}
+
+// Generic type for generator functions
+export type GeneratorFunction<TAlgorithm, TOptions, TResult> = (
+  algorithm: TAlgorithm,
+  opts?: BaseGeneratorOptions & TOptions
+) => TResult;
+
 const jibber = {
-  font: (algorithm: FontAlgorithm, opts: FontOptions = {}) =>
-    generateFont(algorithm, opts),
-  text: (algorithm: TextAlgorithm, opts: TextOptions = {}) =>
-    generateText(algorithm, opts),
-  symbol: (algorithm: SymbolAlgorithm, opts: SymbolOptions = {}) =>
-    generateSymbol(algorithm, opts),
-  image: (algorithm: ImageAlgorithm, opts: ImageOptions = {}) =>
-    generateImage(algorithm, opts),
-  fingerprint: (
-    algorithm: FingerprintAlgorithm,
-    opts: FingerprintOptions = {}
-  ) => generateFingerprint(algorithm, opts),
+  font: generateFont as GeneratorFunction<
+    FontAlgorithm,
+    FontOptions,
+    ReturnType<typeof generateFont>
+  >,
+  text: generateText as GeneratorFunction<
+    TextAlgorithm,
+    TextOptions,
+    ReturnType<typeof generateText>
+  >,
+  symbol: generateSymbol as GeneratorFunction<
+    SymbolAlgorithm,
+    SymbolOptions,
+    ReturnType<typeof generateSymbol>
+  >,
+  image: generateImage as GeneratorFunction<
+    ImageAlgorithm,
+    ImageOptions,
+    ReturnType<typeof generateImage>
+  >,
+  fingerprint: generateFingerprint as GeneratorFunction<
+    FingerprintAlgorithm,
+    FingerprintOptions,
+    ReturnType<typeof generateFingerprint>
+  >,
 };
 
 export default jibber;

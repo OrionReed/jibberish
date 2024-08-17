@@ -1,8 +1,8 @@
 # Jibber
 
-Jibber is a tiny library for generating useful gibberish. The goal is to make it easy to generate random, but _plausible_ UI elements, text, fonts, and images.
+Jibber is a JavaScript library for useful gibberish. It simplifies the creation of random yet _plausible_ UI elements, text, fonts, and images.
 
-You can also use it to generate fingerprints, unique visual identifiers for a given piece of data designed to be reliably differentiable by a human.
+Jibber can be used for placeholders, layout testing, or fingerprinting — unique visual identifiers for specific data, designed for easy human differentiation.
 
 ## Installation
 

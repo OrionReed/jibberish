@@ -5,10 +5,14 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "vite test",
+    "preview": "vite preview test",
+    "build:test": "vite build test"
   },
   "devDependencies": {
     "@types/node": "^22.4.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vite": "^4.3.9"
   }
 }

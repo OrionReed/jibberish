@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jibber Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .demo-section {
+            margin-bottom: 30px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .demo-output {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Jibber Test Page</h1>
+
+    <div class="demo-section">
+      <h2>Font Demo</h2>
+      <p id="font-demo" style="font-size: 24px;">This text will use a generated font</p>
+      <div class="demo-output" id="font-output"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Text Demo</h2>
+      <p id="text-demo"></p>
+      <div class="demo-output" id="text-output"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Symbol Demo</h2>
+      <div id="symbol-demo"></div>
+      <div class="demo-output" id="symbol-output"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Image Demo</h2>
+      <div id="image-demo"></div>
+      <div class="demo-output" id="image-output"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Fingerprint Demo</h2>
+      <div id="fingerprint-demo"></div>
+      <div class="demo-output" id="fingerprint-output"></div>
+    </div>
+
+    <script type="module">
+        import jibber from './src/index.js';
+
+        // Font Demo
+        const fontDemo = document.getElementById('font-demo');
+        const fontOutput = document.getElementById('font-output');
+        const font = jibber.font('futuristic', { seed: '123', weight: 700 });
+        fontDemo.style.fontFamily = font;
+        fontOutput.textContent = `Generated font: ${font}`;
+
+        // Text Demo
+        const textDemo = document.getElementById('text-demo');
+        const textOutput = document.getElementById('text-output');
+        const text = jibber.text('lorem', { seed: '456', length: 50 });
+        textDemo.textContent = text;
+        textOutput.textContent = `Generated text (50 characters): ${text}`;
+
+        // Symbol Demo
+        const symbolDemo = document.getElementById('symbol-demo');
+        const symbolOutput = document.getElementById('symbol-output');
+        const symbol = jibber.symbol('minimal-path', { seed: '789' });
+        symbolDemo.innerHTML = symbol;
+        symbolOutput.textContent = `Generated symbol SVG: ${symbol.slice(0, 100)}...`;
+
+        // Image Demo
+        const imageDemo = document.getElementById('image-demo');
+        const imageOutput = document.getElementById('image-output');
+        try {
+            const image = jibber.image('pattern', { seed: '101112' });
+            imageDemo.innerHTML = `<img src="${image}" alt="Generated Image" style="max-width: 200px;">`;
+            imageOutput.textContent = `Generated image data: ${image.slice(0, 50)}...`;
+        } catch (error) {
+            imageOutput.textContent = `Error generating image: ${error.message}`;
+        }
+
+        // Fingerprint Demo
+        const fingerprintDemo = document.getElementById('fingerprint-demo');
+        const fingerprintOutput = document.getElementById('fingerprint-output');
+        try {
+            const fingerprint = jibber.fingerprint('default', { seed: '131415' });
+            fingerprintDemo.innerHTML = fingerprint;
+            fingerprintOutput.textContent = `Generated fingerprint: ${fingerprint.slice(0, 100)}...`;
+        } catch (error) {
+            fingerprintOutput.textContent = `Error generating fingerprint: ${error.message}`;
+        }
+    </script>
+  </body>
+</html>
