@@ -1,7 +1,6 @@
 import { markov, MarkovOptions } from "./markov";
-import { AlphaCharsOptions } from "./alphaChars";
 
-export type TextOptions = MarkovOptions | AlphaCharsOptions;
+export type TextOptions = MarkovOptions;
 
 export const generateText = (opts: TextOptions): string => {
   switch (opts.algorithm) {
@@ -12,4 +11,4 @@ export const generateText = (opts: TextOptions): string => {
   }
 };
 
-export type { MarkovOptions, AlphaCharsOptions };
+export type { MarkovOptions };

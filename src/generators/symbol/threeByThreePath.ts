@@ -82,9 +82,7 @@ function getNextIndex(
   ].filter((index) => index !== -1 && !visitedIndices.has(index));
 
   if (possibleMoves.length === 0) {
-    return Array.from(
-      new Set([0, 1, 2, 3, 4, 5, 6, 7, 8]).difference(visitedIndices)
-    )[0];
+    return [0, 1, 2, 3, 4, 5, 6, 7, 8].filter((x) => !visitedIndices.has(x))[0];
   }
 
   return possibleMoves[Math.floor(random.next() * possibleMoves.length)];

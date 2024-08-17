@@ -1,14 +1,30 @@
 {
-  "name": "jibber",
+  "name": "jibberish",
   "version": "0.0.1",
+  "description": "A JavaScript library for useful gibberish",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "vite test",
     "preview": "vite preview test",
-    "build:test": "vite build test"
+    "build:test": "vite build test",
+    "prepublishOnly": "yarn build"
+  },
+  "keywords": [
+    "gibberish",
+    "placeholder",
+    "text",
+    "generator"
+  ],
+  "author": "Orion Reed",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orionreed/jibberish.git"
   },
   "devDependencies": {
     "@types/node": "^22.4.0",

@@ -13,7 +13,7 @@ export const generateSymbol: JibberGenerator<SymbolOptions, SVGElement> = (
     case "mixed-shapes":
       return mixedShapes(opts);
     default:
-      throw new Error(`Unsupported algorithm: ${opts.algorithm}`);
+      throw new Error(`Unsupported algorithm: ${(opts as any).algorithm}`);
   }
 };
 
