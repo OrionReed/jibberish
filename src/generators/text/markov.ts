@@ -1,25 +1,49 @@
 import { BaseOpts, JibberGenerator } from "../..";
 import { SeededRandom } from "../../utils/random";
-import { LOREM_IPSUM, NIETZSCHE } from "./data";
-
-const source = {
-  lorem: LOREM_IPSUM,
-  nietzsche: NIETZSCHE,
-};
+import { LOREM_IPSUM } from "./data";
 
 export interface MarkovOptions extends BaseOpts {
   algorithm: "markov";
-  type: "word" | "sentence" | "paragraph";
-  length: number;
-  data: keyof typeof source;
+  words?: number;
+  sentences?: number;
+  paragraphs?: number;
+  data?: string;
 }
 
 export const markov: JibberGenerator<MarkovOptions, string> = (opts) => {
-  const { type, seed, length, data = "lorem" } = opts;
-  const chain = new MarkovChain(source[data]);
+  const { seed = "", words, sentences, paragraphs, data = LOREM_IPSUM } = opts;
+  const chain = new MarkovChain(data);
+  const rng = new SeededRandom(seed);
 
-  // just sentences for now
-  return chain.generateText(length, String(seed));
+  const generateSentence = (wordCount: number): string => {
+    const sentence = chain.generate(wordCount, rng);
+    return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+  };
+
+  if (words) {
+    return generateSentence(words);
+  }
+
+  if (sentences) {
+    const generatedSentences = Array.from({ length: sentences }, () =>
+      generateSentence(Math.floor(rng.next() * 10) + 5)
+    );
+    return generatedSentences.join(". ") + ".";
+  }
+
+  if (paragraphs) {
+    const generatedParagraphs = Array.from({ length: paragraphs }, () => {
+      const sentenceCount = Math.floor(rng.next() * 3) + 3;
+      const paragraphSentences = Array.from({ length: sentenceCount }, () =>
+        generateSentence(Math.floor(rng.next() * 10) + 5)
+      );
+      return paragraphSentences.join(". ") + ".";
+    });
+    return generatedParagraphs.join("\n\n");
+  }
+
+  // Default to generating one sentence if no specific option is provided
+  return generateSentence(10);
 };
 
 class MarkovChain {
@@ -41,8 +65,7 @@ class MarkovChain {
     }
   }
 
-  generateText(length: number, seed: string): string {
-    const rng = new SeededRandom(seed);
+  generate(length: number, rng: SeededRandom): string {
     const startWord = Array.from(this.chain.keys())[
       Math.floor(rng.next() * this.chain.size)
     ];

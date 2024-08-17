@@ -5,6 +5,7 @@ export type Test<Opts, Out> = {
   name: string;
   output: (result: Out) => string;
   examples: Opts[];
+  hiddenKeys?: (keyof Opts | string)[];
 };
 
 function generateTestHTML(test: TestType): string {
@@ -81,8 +82,13 @@ const setupTest = (test: TestType) => {
         ) => {
           const options = { ...example, seed: Math.random() };
           const result = await jibber[test.name](options);
+          const excludedKeys = [
+            "algorithm",
+            "seed",
+            ...(test.hiddenKeys || []),
+          ];
           const configString = Object.entries(options)
-            .filter(([key]) => key !== "algorithm" && key !== "seed")
+            .filter(([key]) => !excludedKeys.includes(key as any))
             .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
             .join(", ");
           exampleElements[index].innerHTML = `

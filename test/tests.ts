@@ -7,6 +7,7 @@ import {
   FingerprintOptions,
   FontResult,
 } from "../src";
+import { NIETZSCHE } from "../src/generators/text/data";
 
 export const fontTest: Test<FontOptions, FontResult> = {
   name: "font",
@@ -24,9 +25,12 @@ export const fontTest: Test<FontOptions, FontResult> = {
 export const textTest: Test<TextOptions, string> = {
   name: "text",
   output: (result) => `<p>${result}</p>`,
+  hiddenKeys: ["data"],
   examples: [
-    { algorithm: "markov", length: 50 },
-    { algorithm: "markov", length: 100 },
+    { algorithm: "markov", words: 50 },
+    { algorithm: "markov", sentences: 3 },
+    { algorithm: "markov", paragraphs: 2 },
+    { algorithm: "markov", paragraphs: 1, data: NIETZSCHE },
     { algorithm: "alphaChars", length: 150 },
   ],
 };
