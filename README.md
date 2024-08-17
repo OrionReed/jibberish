@@ -1,15 +1,15 @@
-# Jibber
+# Jibberish
 
-Jibber is a JavaScript library for useful gibberish. It simplifies the creation of random yet _plausible_ UI elements, text, fonts, and images.
+A JavaScript library for useful gibberish. It simplifies the creation of random yet _plausible_ UI elements, text, fonts, and images.
 
-Jibber can be used for placeholders, layout testing, or fingerprinting — unique visual identifiers for specific data, designed for easy human differentiation.
+Jibberish can be used for placeholders, layout testing, or fingerprinting — unique visual identifiers for specific data, designed for easy human differentiation.
 
 ## Installation
 
 ```bash
-npm install jibber
+npm install jibberish
 # or
-yarn add jibber
+yarn add jibberish
 ```
 
 then
