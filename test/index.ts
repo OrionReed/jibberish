@@ -1,55 +1,86 @@
-import jibber from "../src/index";
+import jibber, {
+  FontAlgorithm,
+  TextAlgorithm,
+  SymbolAlgorithm,
+  ImageAlgorithm,
+  FingerprintAlgorithm,
+} from "../src";
 
-// Font Demo
-const fontDemo = document.getElementById("font-demo") as HTMLParagraphElement;
-const fontOutput = document.getElementById("font-output") as HTMLDivElement;
-const font = jibber.font("futuristic", { seed: "123", weight: 700 });
-fontDemo.style.fontFamily = font;
-fontOutput.textContent = `Generated font: ${font}`;
-
-// Text Demo
-const textDemo = document.getElementById("text-demo") as HTMLParagraphElement;
-const textOutput = document.getElementById("text-output") as HTMLDivElement;
-const text = jibber.text("lorem", { seed: "456", length: 50 });
-textDemo.textContent = text;
-textOutput.textContent = `Generated text (50 characters): ${text}`;
-
-// Symbol Demo
-const symbolDemo = document.getElementById("symbol-demo") as HTMLDivElement;
-const symbolOutput = document.getElementById("symbol-output") as HTMLDivElement;
-const symbol = jibber.symbol("minimal-path", { seed: "789" });
-symbolDemo.innerHTML = symbol;
-symbolOutput.textContent = `Generated symbol SVG: ${symbol.slice(0, 100)}...`;
-
-// Image Demo
-const imageDemo = document.getElementById("image-demo") as HTMLDivElement;
-const imageOutput = document.getElementById("image-output") as HTMLDivElement;
-try {
-  const image = jibber.image("pattern", { seed: "101112" });
-  imageDemo.innerHTML = `<img src="${image}" alt="Generated Image" style="max-width: 200px;">`;
-  imageOutput.textContent = `Generated image data: ${image.slice(0, 50)}...`;
-} catch (error) {
-  imageOutput.textContent = `Error generating image: ${
-    (error as Error).message
-  }`;
+interface DemoConfig {
+  name: string;
+  algorithms: string[];
+  generate: (
+    algorithm: any,
+    opts?: { seed?: string | number }
+  ) => Promise<string>;
 }
 
-// Fingerprint Demo
-const fingerprintDemo = document.getElementById(
-  "fingerprint-demo"
-) as HTMLDivElement;
-const fingerprintOutput = document.getElementById(
-  "fingerprint-output"
-) as HTMLDivElement;
-try {
-  const fingerprint = jibber.fingerprint("default", { seed: "131415" });
-  fingerprintDemo.innerHTML = fingerprint;
-  fingerprintOutput.textContent = `Generated fingerprint: ${fingerprint.slice(
-    0,
-    100
-  )}...`;
-} catch (error) {
-  fingerprintOutput.textContent = `Error generating fingerprint: ${
-    (error as Error).message
-  }`;
-}
+const demos: DemoConfig[] = [
+  {
+    name: "font",
+    algorithms: ["default", "serif", "sans-serif", "monospace"],
+    generate: async (algorithm: FontAlgorithm, opts) => {
+      const font = await jibber.font(algorithm, opts);
+      return `<span style="font-family: '${font}';">This text uses the generated font.</span>`;
+    },
+  },
+  {
+    name: "text",
+    algorithms: ["default", "lorem", "nietzsche"],
+    generate: (algorithm: TextAlgorithm, opts) => jibber.text(algorithm, opts),
+  },
+  {
+    name: "symbol",
+    algorithms: ["default", "geometric", "abstract", "iconic"],
+    generate: (algorithm: SymbolAlgorithm, opts) =>
+      jibber.symbol(algorithm, opts),
+  },
+  {
+    name: "image",
+    algorithms: ["default", "abstract", "landscape", "portrait"],
+    generate: async (algorithm: ImageAlgorithm, opts) => {
+      const imageUrl = await jibber.image(algorithm, opts);
+      return `<img src="${imageUrl}" alt="Generated Image">`;
+    },
+  },
+  {
+    name: "fingerprint",
+    algorithms: ["default", "circular", "linear", "grid"],
+    generate: (algorithm: FingerprintAlgorithm, opts) =>
+      jibber.fingerprint(algorithm, opts),
+  },
+];
+
+const setupDemo = (demo: DemoConfig) => {
+  const algorithmSelect = document.getElementById(
+    `${demo.name}-algorithm`
+  ) as HTMLSelectElement;
+  const seedInput = document.getElementById(
+    `${demo.name}-seed`
+  ) as HTMLInputElement;
+  const demoElement = document.getElementById(`${demo.name}-demo`);
+  const outputElement = document.getElementById(`${demo.name}-output`);
+
+  // Populate algorithm options
+  algorithmSelect.innerHTML = demo.algorithms
+    .map((alg) => `<option value="${alg}">${alg}</option>`)
+    .join("");
+
+  const updateOutput = async () => {
+    const algorithm = algorithmSelect.value;
+    const seed = seedInput.value;
+    try {
+      const result = await demo.generate(algorithm, { seed });
+      if (demoElement) demoElement.innerHTML = result;
+      if (outputElement) outputElement.textContent = `Output: ${result}`;
+    } catch (error) {
+      if (outputElement) outputElement.textContent = `Error: ${error}`;
+    }
+  };
+
+  algorithmSelect.addEventListener("change", updateOutput);
+  seedInput.addEventListener("input", updateOutput);
+  updateOutput(); // Initial update
+};
+
+demos.forEach(setupDemo);

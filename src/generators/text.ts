@@ -2,7 +2,7 @@
 
 import { BaseGeneratorOptions } from "../index";
 import { SeededRandom } from "../utils/random";
-import { LOREM_IPSUM } from "./data/text";
+import { LOREM_IPSUM, NIETZSCHE } from "./data/text";
 
 export interface TextOptions extends BaseGeneratorOptions {
   length?: number;
@@ -10,7 +10,7 @@ export interface TextOptions extends BaseGeneratorOptions {
   sampleText?: string;
 }
 
-export type TextAlgorithm = "lorem" | "pseudolang";
+export type TextAlgorithm = "lorem" | "nietzsche";
 
 class MarkovChain {
   private chain: Map<string, string[]> = new Map();
@@ -60,29 +60,26 @@ export function generateText(
   const rng = new SeededRandom(opts.seed || Date.now());
   const length = opts.length || 10;
   const type = opts.type || "words";
-  const sampleText = opts.sampleText || LOREM_IPSUM;
+  const lookup = {
+    lorem: LOREM_IPSUM,
+    nietzsche: NIETZSCHE,
+  };
+  const sampleText = lookup[algorithm] || LOREM_IPSUM;
+  const markovChain = new MarkovChain(sampleText);
 
-  if (algorithm === "lorem") {
-    const markovChain = new MarkovChain(sampleText);
-
-    switch (type) {
-      case "words":
-        return markovChain.generateText(length, rng);
-      case "sentences":
-        return markovChain.generateText(length, rng);
-      case "paragraphs":
-        return markovChain.generateText(length, rng);
-      default:
-        return markovChain.generateText(length, rng);
-    }
-  } else {
-    // Fallback to the existing pseudolang algorithm
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters[rng.nextInt(0, characters.length - 1)];
-    }
-    return result;
+  switch (type) {
+    case "words":
+      return markovChain.generateText(length, rng);
+    case "sentences":
+      const sentences = [];
+      for (let i = 0; i < length; i++) {
+        const sentenceLength = rng.nextInt(5, 10);
+        sentences.push(markovChain.generateText(sentenceLength, rng));
+      }
+      return sentences.join(" ");
+    case "paragraphs":
+      return markovChain.generateText(length, rng);
+    default:
+      return markovChain.generateText(length, rng);
   }
 }
