@@ -8,82 +8,10 @@
   </head>
   <body>
     <h1>Jibber Test Page</h1>
-
-    <section class="demo-section">
-      <div class="demo-header">
-        <h2>Font Demo</h2>
-        <div class="demo-controls">
-          <select id="font-algorithm" class="algorithm-select">
-            <option value="default">Default</option>
-            <!-- Add more algorithm options here -->
-          </select>
-          <input type="text" id="font-seed" class="seed-input" placeholder="Enter seed for font">
-        </div>
-      </div>
-      <p id="font-demo" style="font-size: 24px;">This text will use a generated font</p>
-      <div class="demo-output" id="font-output"></div>
-    </section>
-
-    <section class="demo-section">
-      <div class="demo-header">
-        <h2>Text Demo</h2>
-        <div class="demo-controls">
-          <select id="text-algorithm" class="algorithm-select">
-            <option value="default">Default</option>
-            <!-- Add more algorithm options here -->
-          </select>
-          <input type="text" id="text-seed" class="seed-input" placeholder="Enter seed for text">
-        </div>
-      </div>
-      <p id="text-demo"></p>
-      <div class="demo-output" id="text-output"></div>
-    </section>
-
-    <section class="demo-section">
-      <div class="demo-header">
-        <h2>Symbol Demo</h2>
-        <div class="demo-controls">
-          <select id="symbol-algorithm" class="algorithm-select">
-            <option value="default">Default</option>
-            <!-- Add more algorithm options here -->
-          </select>
-          <input type="text" id="symbol-seed" class="seed-input" placeholder="Enter seed for symbol">
-        </div>
-      </div>
-      <div id="symbol-demo"></div>
-      <div class="demo-output" id="symbol-output"></div>
-    </section>
-
-    <section class="demo-section">
-      <div class="demo-header">
-        <h2>Image Demo</h2>
-        <div class="demo-controls">
-          <select id="image-algorithm" class="algorithm-select">
-            <option value="default">Default</option>
-            <!-- Add more algorithm options here -->
-          </select>
-          <input type="text" id="image-seed" class="seed-input" placeholder="Enter seed for image">
-        </div>
-      </div>
-      <div id="image-demo"></div>
-      <div class="demo-output" id="image-output"></div>
-    </section>
-
-    <section class="demo-section">
-      <div class="demo-header">
-        <h2>Fingerprint Demo</h2>
-        <div class="demo-controls">
-          <select id="fingerprint-algorithm" class="algorithm-select">
-            <option value="default">Default</option>
-            <!-- Add more algorithm options here -->
-          </select>
-          <input type="text" id="fingerprint-seed" class="seed-input" placeholder="Enter seed for fingerprint">
-        </div>
-      </div>
-      <div id="fingerprint-demo"></div>
-      <div class="demo-output" id="fingerprint-output"></div>
-    </section>
-
+    <div id="demo-container">
+      <div class="editor" id="editor"></div>
+      <div class="output" id="output"></div>
+    </div>
     <script type="module" src="./index.ts"></script>
   </body>
 </html>

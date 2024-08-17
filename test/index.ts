@@ -1,86 +1,118 @@
-import jibber, {
-  FontAlgorithm,
-  TextAlgorithm,
-  SymbolAlgorithm,
-  ImageAlgorithm,
-  FingerprintAlgorithm,
-} from "../src";
+import { demos, DemoConfig, JibberOptions } from "./config";
+import { EditorState } from "@codemirror/state";
+import { EditorView } from "@codemirror/view";
+import {
+  autocompletion,
+  closeBrackets,
+  closeBracketsKeymap,
+  completionKeymap,
+} from "@codemirror/autocomplete";
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import {
+  bracketMatching,
+  defaultHighlightStyle,
+  foldGutter,
+  foldKeymap,
+  indentOnInput,
+  syntaxHighlighting,
+} from "@codemirror/language";
+import { lintKeymap } from "@codemirror/lint";
+import { highlightSelectionMatches, searchKeymap } from "@codemirror/search";
+import {
+  crosshairCursor,
+  drawSelection,
+  dropCursor,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  highlightSpecialChars,
+  keymap,
+  lineNumbers,
+  rectangularSelection,
+} from "@codemirror/view";
+import { json } from "@codemirror/lang-json";
 
-interface DemoConfig {
-  name: string;
-  algorithms: string[];
-  generate: (
-    algorithm: any,
-    opts?: { seed?: string | number }
-  ) => Promise<string>;
+function generateDemoHTML(demo: DemoConfig): string {
+  return `
+    <section class="demo-section">
+      <h2>${demo.name.charAt(0).toUpperCase() + demo.name.slice(1)} Demo</h2>
+      <div id="${demo.name}-demo" class="demo-output"></div>
+      <div id="${demo.name}-editor" class="json-editor"></div>
+    </section>
+  `;
 }
 
-const demos: DemoConfig[] = [
-  {
-    name: "font",
-    algorithms: ["default", "serif", "sans-serif", "monospace"],
-    generate: async (algorithm: FontAlgorithm, opts) => {
-      const font = await jibber.font(algorithm, opts);
-      return `<span style="font-family: '${font}';">This text uses the generated font.</span>`;
-    },
-  },
-  {
-    name: "text",
-    algorithms: ["default", "lorem", "nietzsche"],
-    generate: (algorithm: TextAlgorithm, opts) => jibber.text(algorithm, opts),
-  },
-  {
-    name: "symbol",
-    algorithms: ["default", "geometric", "abstract", "iconic"],
-    generate: (algorithm: SymbolAlgorithm, opts) =>
-      jibber.symbol(algorithm, opts),
-  },
-  {
-    name: "image",
-    algorithms: ["default", "abstract", "landscape", "portrait"],
-    generate: async (algorithm: ImageAlgorithm, opts) => {
-      const imageUrl = await jibber.image(algorithm, opts);
-      return `<img src="${imageUrl}" alt="Generated Image">`;
-    },
-  },
-  {
-    name: "fingerprint",
-    algorithms: ["default", "circular", "linear", "grid"],
-    generate: (algorithm: FingerprintAlgorithm, opts) =>
-      jibber.fingerprint(algorithm, opts),
-  },
-];
+function initializePage() {
+  const container = document.getElementById("demo-container");
+  if (container) {
+    container.innerHTML = demos.map(generateDemoHTML).join("");
+  }
+
+  demos.forEach(setupDemo);
+}
 
 const setupDemo = (demo: DemoConfig) => {
-  const algorithmSelect = document.getElementById(
-    `${demo.name}-algorithm`
-  ) as HTMLSelectElement;
-  const seedInput = document.getElementById(
-    `${demo.name}-seed`
-  ) as HTMLInputElement;
+  const editorElement = document.getElementById(`${demo.name}-editor`);
   const demoElement = document.getElementById(`${demo.name}-demo`);
-  const outputElement = document.getElementById(`${demo.name}-output`);
 
-  // Populate algorithm options
-  algorithmSelect.innerHTML = demo.algorithms
-    .map((alg) => `<option value="${alg}">${alg}</option>`)
-    .join("");
+  if (editorElement && demoElement) {
+    const defaultOptions: JibberOptions[typeof demo.name] = demo.defaultOptions;
+    const initialJson = JSON.stringify(defaultOptions, null, 2);
 
-  const updateOutput = async () => {
-    const algorithm = algorithmSelect.value;
-    const seed = seedInput.value;
-    try {
-      const result = await demo.generate(algorithm, { seed });
-      if (demoElement) demoElement.innerHTML = result;
-      if (outputElement) outputElement.textContent = `Output: ${result}`;
-    } catch (error) {
-      if (outputElement) outputElement.textContent = `Error: ${error}`;
-    }
-  };
+    const updateOutput = (view: EditorView) => {
+      try {
+        const jsonString = view.state.doc.toString();
+        const opts = JSON.parse(jsonString) as JibberOptions[typeof demo.name];
+        demo.generate(opts).then((result) => {
+          demoElement.innerHTML = result;
+        });
+      } catch (error) {
+        demoElement.textContent = `Error: ${error}`;
+      }
+    };
 
-  algorithmSelect.addEventListener("change", updateOutput);
-  seedInput.addEventListener("input", updateOutput);
-  updateOutput(); // Initial update
+    const editor = new EditorView({
+      parent: editorElement,
+      state: EditorState.create({
+        doc: initialJson,
+        extensions: [
+          lineNumbers(),
+          highlightActiveLineGutter(),
+          highlightSpecialChars(),
+          history(),
+          foldGutter(),
+          drawSelection(),
+          dropCursor(),
+          EditorState.allowMultipleSelections.of(true),
+          indentOnInput(),
+          syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+          bracketMatching(),
+          closeBrackets(),
+          autocompletion(),
+          rectangularSelection(),
+          crosshairCursor(),
+          highlightActiveLine(),
+          highlightSelectionMatches(),
+          keymap.of([
+            ...closeBracketsKeymap,
+            ...defaultKeymap,
+            ...searchKeymap,
+            ...historyKeymap,
+            ...foldKeymap,
+            ...completionKeymap,
+            ...lintKeymap,
+          ]),
+          json(),
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged) {
+              updateOutput(update.view);
+            }
+          }),
+        ],
+      }),
+    });
+
+    updateOutput(editor);
+  }
 };
 
-demos.forEach(setupDemo);
+document.addEventListener("DOMContentLoaded", initializePage);
