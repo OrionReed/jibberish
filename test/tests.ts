@@ -29,19 +29,25 @@ export const textTest: Test<TextOptions, string> = {
   examples: [
     { algorithm: "markov", words: 50 },
     { algorithm: "markov", sentences: 3 },
-    { algorithm: "markov", paragraphs: 2 },
+    { algorithm: "markov", paragraphs: 2, data: NIETZSCHE },
     { algorithm: "markov", paragraphs: 1, data: NIETZSCHE },
-    { algorithm: "alphaChars", length: 150 },
   ],
 };
 
-export const symbolTest: Test<SymbolOptions, string> = {
+export const symbolTest: Test<SymbolOptions, SVGElement> = {
   name: "symbol",
-  output: (result) => `<img src="${result}" alt="Generated Symbol">`,
+  output: (result) => result.outerHTML,
   examples: [
-    { algorithm: "basic", size: 32 },
-    { algorithm: "basic", size: 64 },
-    { algorithm: "complex", size: 128 },
+    { algorithm: "3x3-path", size: 32 },
+    { algorithm: "3x3-path", size: 32 },
+    { algorithm: "3x3-path", size: 32 },
+    { algorithm: "3x3-path", size: 32 },
+    { algorithm: "3x3-path", size: 32 },
+    { algorithm: "mixed-shapes", size: 32 },
+    { algorithm: "mixed-shapes", size: 32 },
+    { algorithm: "mixed-shapes", size: 32 },
+    { algorithm: "mixed-shapes", size: 32 },
+    { algorithm: "mixed-shapes", size: 32 },
   ],
 };
 
