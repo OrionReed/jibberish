@@ -1,7 +1,7 @@
 import { BaseOpts, JibberGenerator } from "../..";
 
 export interface ImageOptions extends BaseOpts {
-  algorithm: "pixel" | "vector";
+  type: "pixel" | "vector";
   dimensions: { width: number; height: number };
 }
 
@@ -10,7 +10,7 @@ export type ImageResult = HTMLImageElement;
 export const generateImage: JibberGenerator<ImageOptions, ImageResult> = (
   opts
 ) => {
-  const { algorithm, dimensions } = opts;
+  const { type, dimensions } = opts;
   const img = new Image(dimensions.width, dimensions.height);
 
   // In a real implementation, you would generate the image data here

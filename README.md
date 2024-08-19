@@ -16,10 +16,10 @@ then
 
 ```html
 <script type="module">
-  import jibber from "jibber";
-  const font = jibber.font("futuristic", { seed: "123", weight: 700 });
-  const text = jibber.text("lorem", { seed: "123", length: 10 });
-  const symbol = jibber.symbol("minimal-path", { seed: "123" });
+  import jibber from "jibberish";
+  const font = jibber.font({ type: "futuristic", seed: "123", weight: 700 });
+  const text = jibber.text({ type: "lorem", seed: "123", length: 10 });
+  const symbol = jibber.symbol({ type: "3x3-path", seed: "123" });
   // Apply the generated font to a heading
   document.getElementById("jibber-heading").style.fontFamily = font;
   // Set the generated text content

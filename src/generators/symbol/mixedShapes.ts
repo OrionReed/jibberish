@@ -2,7 +2,7 @@ import { BaseOpts, JibberGenerator } from "../..";
 import { SeededRandom } from "../../utils/random";
 
 export interface MixedShapesOptions extends BaseOpts {
-  algorithm: "mixed-shapes";
+  type: "mixed-shapes";
   size: number;
 }
 

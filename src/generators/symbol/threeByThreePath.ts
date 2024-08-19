@@ -2,7 +2,7 @@ import { BaseOpts, JibberGenerator } from "../..";
 import { SeededRandom } from "../../utils/random";
 
 export interface ThreeByThreePathOptions extends BaseOpts {
-  algorithm: "3x3-path";
+  type: "3x3-path";
   size: number;
 }
 

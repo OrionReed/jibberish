@@ -8,22 +8,22 @@ import {
 } from "./generators/fingerprint";
 
 export interface BaseOpts {
-  algorithm: string;
+  type: string;
   seed?: string | number;
 }
 
 export type JibberGenerator<T extends BaseOpts, R> = (opts: T) => R;
 
 type JibberFunction<T extends BaseOpts, R> = JibberGenerator<T, R> & {
-  algorithms: readonly string[];
+  types: readonly string[];
 };
 
 function createJibberFunction<T extends BaseOpts, R>(
   generate: JibberGenerator<T, R>,
-  algorithms: readonly string[]
+  types: readonly string[]
 ): JibberFunction<T, R> {
   const jibberFn = generate as JibberFunction<T, R>;
-  jibberFn.algorithms = algorithms;
+  jibberFn.types = types;
   return jibberFn;
 }
 

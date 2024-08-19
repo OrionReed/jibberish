@@ -3,7 +3,7 @@ import { SeededRandom } from "../../utils/random";
 import { LOREM_IPSUM } from "./data";
 
 export interface MarkovOptions extends BaseOpts {
-  algorithm: "markov";
+  type: "markov";
   words?: number;
   sentences?: number;
   paragraphs?: number;

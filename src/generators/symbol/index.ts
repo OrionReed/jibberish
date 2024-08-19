@@ -7,13 +7,13 @@ export type SymbolOptions = ThreeByThreePathOptions | MixedShapesOptions;
 export const generateSymbol: JibberGenerator<SymbolOptions, SVGElement> = (
   opts
 ) => {
-  switch (opts.algorithm) {
+  switch (opts.type) {
     case "3x3-path":
       return threeByThreePath(opts);
     case "mixed-shapes":
       return mixedShapes(opts);
     default:
-      throw new Error(`Unsupported algorithm: ${(opts as any).algorithm}`);
+      throw new Error(`Unsupported symbol type: ${(opts as any).type}`);
   }
 };
 

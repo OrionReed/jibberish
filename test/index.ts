@@ -9,11 +9,11 @@ export type Test<Opts, Out> = {
 };
 
 function generateTestHTML(test: TestType): string {
-  const algorithmGroups = test.examples.reduce((acc, example) => {
-    if (!acc[example.algorithm]) {
-      acc[example.algorithm] = [];
+  const typeGroups = test.examples.reduce((acc, example) => {
+    if (!acc[example.type]) {
+      acc[example.type] = [];
     }
-    acc[example.algorithm].push(example);
+    acc[example.type].push(example);
     return acc;
   }, {} as Record<string, Array<(typeof test.examples)[number]>>);
 
@@ -23,14 +23,12 @@ function generateTestHTML(test: TestType): string {
       <div class="test-controls">
         <button id="${test.name}-randomise">Randomise</button>
       </div>
-      ${Object.entries(algorithmGroups)
+      ${Object.entries(typeGroups)
         .map(
-          ([algorithm, examples]) => `
-        <div class="algorithm-section">
-          <h3>${
-            algorithm.charAt(0).toUpperCase() + algorithm.slice(1)
-          } Algorithm</h3>
-          <div id="${test.name}-${algorithm}-tests" class="test-outputs"></div>
+          ([type, examples]) => `
+        <div class="type-section">
+          <h3>${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+          <div id="${test.name}-${type}-tests" class="test-outputs"></div>
         </div>
       `
         )
@@ -52,24 +50,24 @@ const setupTest = (test: TestType) => {
   const randomiseButton = document.getElementById(`${test.name}-randomise`);
 
   if (randomiseButton) {
-    const algorithmGroups = test.examples.reduce((acc, example) => {
-      if (!acc[example.algorithm]) {
-        acc[example.algorithm] = [];
+    const typeGroups = test.examples.reduce((acc, example) => {
+      if (!acc[example.type]) {
+        acc[example.type] = [];
       }
-      acc[example.algorithm].push(example);
+      acc[example.type].push(example);
       return acc;
     }, {} as Record<string, Array<(typeof test.examples)[number]>>);
 
-    Object.entries(algorithmGroups).forEach(([algorithm, examples]) => {
+    Object.entries(typeGroups).forEach(([type, examples]) => {
       const testsElement = document.getElementById(
-        `${test.name}-${algorithm}-tests`
+        `${test.name}-${type}-tests`
       );
 
       if (testsElement) {
         const createExampleElement = (index: number) => {
           const exampleElement = document.createElement("div");
           exampleElement.className = "test-output";
-          exampleElement.id = `${test.name}-${algorithm}-test-${index}`;
+          exampleElement.id = `${test.name}-${type}-test-${index}`;
           testsElement.appendChild(exampleElement);
           return exampleElement;
         };
@@ -82,11 +80,7 @@ const setupTest = (test: TestType) => {
         ) => {
           const options = { ...example, seed: Math.random() };
           const result = await jibber[test.name](options);
-          const excludedKeys = [
-            "algorithm",
-            "seed",
-            ...(test.hiddenKeys || []),
-          ];
+          const excludedKeys = ["type", "seed", ...(test.hiddenKeys || [])];
           const configString = Object.entries(options)
             .filter(([key]) => !excludedKeys.includes(key as any))
             .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
@@ -105,7 +99,6 @@ const setupTest = (test: TestType) => {
 
         randomiseButton.addEventListener("click", randomiseSeed);
 
-        // Initial render
         examples.forEach((example, index) => {
           updateOutput(example, index);
         });
